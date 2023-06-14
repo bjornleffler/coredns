@@ -130,13 +130,11 @@ func checkSessionInputs(c *caddy.Controller, key string, args []string) error {
 		sessionDomain,
 		sessionScrapeMetric,
 		sessionScrapePort,
-		sessionScrapeTimeout,
-		sessionPrometheusPort}
+		sessionScrapeTimeout}
 	multipleInputKeys := []string{sessionTargetIps}
 	numericInputKeys := []string{
 		sessionScrapePort,
-		sessionScrapeTimeout,
-		sessionPrometheusPort}
+		sessionScrapeTimeout}
 	if slices.Contains(singleInputKeys, key) {
 		if len(args) != 1 {
 			return c.Err("Expected single parameters for " + key)
@@ -189,8 +187,6 @@ func parseSession(c *caddy.Controller, args []string) (*SessionLoadBalancer, err
 			session.manager.scrapePort = uint16(i)
 		case sessionScrapeTimeout:
 			session.manager.scrapeTimeoutSeconds = uint(i)
-		case sessionPrometheusPort:
-			session.prometheus.port = uint16(i)
 		default:
 			return nil, c.Err("Unknown parameter: " + key)
 		}

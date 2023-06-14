@@ -13,16 +13,13 @@ const (
 	sessionScrapeMetric  = "session_scrape_metric"
 	sessionScrapePort    = "session_scrape_port"
 	sessionScrapeTimeout = "session_scrape_timeout"
-	// Remove in favour of metrics plugin.
-	sessionPrometheusPort = "session_prometheus_port"
 )
 
-// SessionLoadBalancer "load balances" answers based on (tcp) session count from the target hosts.
+// SessionLoadBalancer "load balances" answers based on (tcp) session count on the target hosts.
 type SessionLoadBalancer struct {
-	hostname   string
-	domain     string
-	manager    *SessionManager
-	prometheus *PrometheusConfig
+	hostname string
+	domain   string
+	manager  *SessionManager
 }
 
 type PrometheusConfig struct {
@@ -31,10 +28,9 @@ type PrometheusConfig struct {
 
 func NewSessionLoadBalancer() *SessionLoadBalancer {
 	return &SessionLoadBalancer{
-		hostname:   "",
-		domain:     "",
-		manager:    NewSessionManager(),
-		prometheus: &PrometheusConfig{port: 0},
+		hostname: "",
+		domain:   "",
+		manager:  NewSessionManager(),
 	}
 }
 
@@ -44,8 +40,8 @@ func (s *SessionLoadBalancer) PrintConfig() {
 	log.Infof("Target IPs: %v", s.manager.ListIPs())
 	log.Infof("Scrape Metric: %v", s.manager.scrapeMetric)
 	log.Infof("Scrape Port: %v", s.manager.scrapePort)
-	log.Infof("Scrape Timeout: %v", s.manager.scrapeTimeoutSeconds)
-	log.Infof("Prometheus Port: %v", s.prometheus.port)
+	log.Infof("Scrape Interval: %v seconds", s.manager.scrapeIntervalSeconds)
+	log.Infof("Scrape Timeout: %v seconds", s.manager.scrapeTimeoutSeconds)
 }
 
 func split(fqdn string) (hostname, domain string) {
